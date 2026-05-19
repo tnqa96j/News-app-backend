@@ -17,7 +17,14 @@ const PORT = process.env.PORT || 7100;
 connectDB();
 
 // middleware
-app.use(cors()); // 允許跨域請求
+app.use(
+  cors({
+    origin: [
+      `http://localhost:${PORT}`, // 本機開發
+      "https://news-app-omega-five.vercel.app", // 上線網址
+    ],
+  }),
+); // 允許跨域請求
 app.use(express.json({ limit: "10kb" })); // 解析JSON格式的請求主體(req.body)
 app.use(express.urlencoded({ extended: true, limit: "10kb" })); // 解析URL編碼格式的請求體，限制請求體大小，超過直接拒絕
 
@@ -32,8 +39,8 @@ app.get("/", (req, res) => {
 });
 
 // health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
 app.listen(PORT, () => {
