@@ -30,6 +30,12 @@ app.use("/api/comments", commentRoutes);
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+// health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
