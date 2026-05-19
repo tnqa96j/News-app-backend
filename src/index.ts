@@ -23,6 +23,7 @@ app.use(
       `http://localhost:${PORT}`, // 本機開發
       "https://news-app-omega-five.vercel.app", // 上線網址
     ],
+    credentials: true,
   }),
 ); // 允許跨域請求
 app.use(express.json({ limit: "10kb" })); // 解析JSON格式的請求主體(req.body)
