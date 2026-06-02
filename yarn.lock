@@ -144,6 +144,11 @@
   resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-10.4.0.tgz#2dc84d1bc32a2eef3c4658985ca7692a0c5c51b3"
   integrity sha512-sDBWI3yLy8EcDzgobvJTWq1MJYzAkQdpjXuPukga9wXonhpMRvd1Izuo2Qgwey2OiEoRIBr35RMU9HJRoOHzpw==
 
+"@getbrevo/brevo@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@getbrevo/brevo/-/brevo-5.0.4.tgz#d7878219cbb1cc95b077cfa06c8083af322993a7"
+  integrity sha512-wN4mHE6O0Pb/d/Dh3E4MAm2zCHbLLUcFF8/wgwTeMPy9KzHBYLu7S/nsJbzd0AWL09MHn8vwue8ULL9YOzluOQ==
+
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz#7a0ee601f60f99a20c7c7c5ff0c80388c1189bd6"

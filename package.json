@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "10",
+    "@getbrevo/brevo": "^5.0.4",
     "@types/cors": "^2.8.19",
     "axios": "^1.15.2",
     "cloudinary": "^2.10.0",

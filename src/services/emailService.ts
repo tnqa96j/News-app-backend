@@ -1,29 +1,19 @@
-import nodemailer from "nodemailer";
+import { BrevoClient } from "@getbrevo/brevo";
 
-// 建立寄信器
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
 });
-
-transporter.verify((error) => {
-  if(error){
-    console.error("Mail transporter error:", error);
-  } else {
-    console.log("Mail server ready");
-  }
-})
 
 export const mailService = {
   async sendOtp(email: string, code: string): Promise<void> {
-    await transporter.sendMail({
-      from: `"News App" <${process.env.MAIL_USER}>`,
-      to: email,
+    await brevo.transactionalEmails.sendTransacEmail({
+      sender: {
+        name: "News App",
+        email: process.env.MAIL_USER,
+      },
+      to: [{ email }],
       subject: "Your verification code",
-      html: `
+      htmlContent: `
         <div style="font-family: sans-serif; max-width: 400px;">
           <h2>Verification Code</h2>
           <p>Your code is:</p>

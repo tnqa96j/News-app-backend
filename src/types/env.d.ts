@@ -20,6 +20,7 @@ declare global {
       GUARDIAN_API_KEY: string;
       FREENEWSAPI_IO_KEY: string;
       NEWSDATA_IO_KEY: string;
+      BREVO_API_KEY: string;
     }
   }
   namespace Express {

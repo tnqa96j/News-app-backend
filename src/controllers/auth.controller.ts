@@ -92,6 +92,7 @@ export const authController = {
         data: { token },
       });
     } catch (error) {
+      console.log(error);
       res.json({
         code: 1,
         codeText: "Server error",
