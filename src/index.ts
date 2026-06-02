@@ -41,7 +41,13 @@ app.get("/", (req, res) => {
 
 // health check endpoint
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
+  try {
+    res.status(200).json({ status: "ok" });
+    console.log("Health check 成功");
+  } catch (error) {
+    console.log("Health check 失敗", error);
+    res.status(500).json({ status: "error" });
+  }
 });
 
 app.listen(PORT, () => {
