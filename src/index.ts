@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => {
   try {
     res.status(200).json({ status: "ok" });
-    console.log("Health check 成功");
+    // console.log("Health check 成功");
   } catch (error) {
     console.log("Health check 失敗", error);
     res.status(500).json({ status: "error" });
