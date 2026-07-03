@@ -1,9 +1,10 @@
 # News-app-backend
 ## 專案介紹
 News-app 的後端 API Server，負責處理使用者驗證、新聞資料聚合與儲存、收藏／訂閱／留言等個人化功能
-網站Demo：https://news-app-omega-five.vercel.app/#/
-前端Repo：https://github.com/tnqa96j/News-app
-後端Repo：https://github.com/tnqa96j/News-app-backend
+
+* 網站Demo：https://news-app-omega-five.vercel.app/#/
+* 前端Repo：https://github.com/tnqa96j/News-app
+* 後端Repo：https://github.com/tnqa96j/News-app-backend
 
 ## 使用技術
 * 語言：TypeScript
