@@ -40,6 +40,126 @@ News-app 的後端 API Server，負責處理使用者驗證、新聞資料聚合
 | GET/POST/DELETE | `/api/user/subscriptions` | 訂閱新聞來源（含查詢是否已訂閱） | ✓ |
 | GET | `/health` | 健康檢查 endpoint | ✗ |
 
+<details>
+<summary><b>展開查看詳細參數</b>（params / query / body）</summary>
+
+### Auth
+
+```
+POST /api/auth/code/email
+  body: { email: string }
+
+POST /api/auth/code/phone
+  body: { phone: string }              // 需符合國際格式，後端會用 libphonenumber-js 驗證
+
+POST /api/auth/login/email
+  body: { email: string, code: string }
+
+POST /api/auth/login/phone
+  body: { phone: string, code: string }
+
+POST /api/auth/login/google
+  body: { code: string }               // Google OAuth authorization code
+```
+
+### News
+
+```
+GET /api/news
+  query: {
+    category?: string          // 預設 "all"
+    q?: string                  // 關鍵字搜尋（比對 title / description）
+    sourceId?: string
+    publishedAfter?: string
+    publishedBefore?: string
+    sort?: "newest" | "oldest"  // 預設 "newest"
+    limit?: string               // 預設 10，上限 10
+    offset?: string              // 預設 0
+  }
+
+GET /api/news/:newsId
+  params: { newsId: string }
+
+GET /api/news/:newsId/comments
+  params: { newsId: string }
+  query: {
+    parentCommentId?: string    // 不帶則取得該新聞的頂層留言
+    sort?: "newest" | "oldest"
+    limit?: string
+    offset?: string
+  }
+
+POST /api/news/:newsId/comments
+  params: { newsId: string }
+  body: {
+    content: string             // 1~500字
+    parentCommentId?: string    // 回覆某留言時帶入
+    replyToUserId?: string
+  }
+```
+
+### Comments
+
+```
+PATCH /api/comments/:commentId
+  params: { commentId: string }
+  body: { content: string }        // 1~500字
+
+DELETE /api/comments/:commentId
+  params: { commentId: string }
+
+POST /api/comments/:commentId/reaction
+  params: { commentId: string }
+  body: { type: 1 | 0 | -1 }        // 1=讚, -1=倒讚, 0=取消反應
+```
+
+### User
+
+```
+GET /api/user/info
+  (無參數，依 JWT 帶的使用者id取得)
+
+PATCH /api/user/info
+  body: { name?: string, pic?: string }   // 至少須帶一個欄位
+
+POST /api/user/avatar
+  body: FormData { file: File }           // multipart/form-data
+```
+
+### Favorites
+
+```
+GET /api/user/favorites/:newsId
+  params: { newsId: string }              // 確認該篇新聞是否已收藏
+
+GET /api/user/favorites
+  query: { sort?: "newest" | "oldest", limit?: string, offset?: string }
+
+POST /api/user/favorites
+  body: { newsId: string }
+
+DELETE /api/user/favorites/:newsId
+  params: { newsId: string }
+```
+
+### Subscriptions
+
+```
+GET /api/user/subscriptions/:sourceId
+  params: { sourceId: string }            // 確認是否已訂閱該來源
+
+GET /api/user/subscriptions
+  query: { sort?: "newest" | "oldest", limit?: string, offset?: string }
+
+POST /api/user/subscriptions
+  body: { sourceId: string, sourceName: string }
+
+DELETE /api/user/subscriptions/:sourceId
+  params: { sourceId: string }
+```
+
+</details>
+
 ## 技術總結
 1. 登入 ＆ OTP ＆ JWT
 * 三種登入方式：
@@ -65,3 +185,9 @@ News-app 的後端 API Server，負責處理使用者驗證、新聞資料聚合
   * 在各個controller中使用Zod進行參數＆請求主體的資料型別驗證
   * 按需求在Mongoose schema設置複合唯一索引避免同一人重複進行某個操作
   * `$addToSet` ＋ `$pull` 的組合，確保同一使用者不會同時出現在 `likes` 與 `dislikes` 兩個陣列裡：按讚時若原本按過倒讚，會同時把它從 dislikes 移除；再次點擊同一個按鈕則是取消該反應。這個互斥邏輯前端也有對應搭配
+ 
+
+
+
+
+
