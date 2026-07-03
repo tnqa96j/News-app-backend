@@ -29,7 +29,7 @@ News-app 的後端 API Server，負責處理使用者驗證、新聞資料聚合
 | POST | `/api/auth/login/google` | Google 登入 | ✗ |
 | GET | `/api/news` | 取得新聞列表（分類／搜尋／排序／分頁） | ✗ |
 | GET | `/api/news/:newsId` | 取得單篇新聞內容 | ✗ |
-| GET | `/api/news/:newsId/comments` | 取得該新聞留言 | 選填 |
+| GET | `/api/news/:newsId/comments` | 取得該新聞留言 | ✗ |
 | POST | `/api/news/:newsId/comments` | 新增留言 | ✓ |
 | PATCH | `/api/comments/:commentId` | 編輯留言 | ✓ |
 | DELETE | `/api/comments/:commentId` | 刪除留言 | ✓ |
@@ -53,7 +53,7 @@ News-app 的後端 API Server，負責處理使用者驗證、新聞資料聚合
     * 驗證碼 5 分鐘後自動失效，且驗證成功後立刻刪除，防止重複使用
   * 待改進的部分：目前OTP是暫存在記憶體裡，電腦關機或伺服器重啟時資料會消失，可以改用 Redis儲存
 * JWT驗證機制
-  * 三種登入方式登入成功後都會簽發token回傳給前端，而前端發送攜帶token的請求時，可以藉由Auth middleware（JWT驗證）解析出其中的使用者資訊，確認有沒有權限進行這個操作（有些操作需要登入之後才能進行）
+  * 三種登入方式登入成功後都會簽發token回傳給前端，而前端發送攜帶token的請求時，可以藉由Auth middleware（JWT驗證）從Request物件中解析出其中的使用者資訊，確認有沒有權限進行這個操作（有些操作需要登入之後才能進行）
 2. 聚合多個新聞API：排程、去重、rate limit 控制
 * 主要從以下兩支API抓取資料：
   * The Guardian API（單一新聞來源、新聞內容完整）
