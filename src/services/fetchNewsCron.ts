@@ -80,7 +80,8 @@ const fetchGuardianNews = async () => {
           }),
         );
         console.log(`[${section}] The Guardian Api抓取完成`);
-      } catch (error) {
+      } catch (error: any) {
+        if (error?.code === 11000) return; // url重複，跳過
         console.error(`[${section}] The Guardian Api 抓取失敗:`, error);
       }
     }),
