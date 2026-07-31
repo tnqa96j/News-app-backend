@@ -1,4 +1,4 @@
-import { Schema, Document, model,Types } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
 
 export interface IFavorites {
   userId: Types.ObjectId;
@@ -33,5 +33,7 @@ favoritesSchema.index(
     unique: true,
   },
 );
+
+favoritesSchema.index({ newsId: 1 });
 
 export default model<IFavoritesDocument>("Collections", favoritesSchema);

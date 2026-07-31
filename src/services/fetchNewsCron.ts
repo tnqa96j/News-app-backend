@@ -2,6 +2,8 @@ import cron from "node-cron";
 import { guardianService } from "./guardianService.js";
 import { freeNewsService } from "./freeNewsApiIOService.js";
 import NewsCollection from "@/models/News.js";
+import FavoritesCollection from "@/models/Favorites.js";
+import CommentCollection from "@/models/Comment.js";
 
 const SECTIONS = [
   "world",
@@ -151,6 +153,35 @@ const fetchFreeNews = async () => {
   }
 };
 
+const deleteOldNews = async () => {
+  // 找出發布時間超過兩個月前的新聞
+  const oldNews = await NewsCollection.find({
+    publishedAt: {
+      $lt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+    },
+  }).select("_id");
+
+  const oldNewsIds = oldNews.map((n) => n._id);
+
+  if (oldNewsIds.length === 0) {
+    console.log("沒有需要刪除的舊新聞");
+    return;
+  }
+
+  // 先刪依賴資料，最後才刪新聞本身
+  const [favResult, commentResult] = await Promise.all([
+    FavoritesCollection.deleteMany({ newsId: { $in: oldNewsIds } }),
+    CommentCollection.deleteMany({ newsId: { $in: oldNewsIds } }),
+  ]);
+  const newsResult = await NewsCollection.deleteMany({
+    _id: { $in: oldNewsIds },
+  });
+
+  console.log(`已刪除 ${newsResult.deletedCount} 篇舊新聞`);
+  console.log(`已刪除 ${favResult.deletedCount} 筆相關收藏`);
+  console.log(`已刪除 ${commentResult.deletedCount} 則相關留言`);
+};
+
 export const fetchNewsCron = () => {
   cron.schedule(
     "0 * * * *",
@@ -158,8 +189,7 @@ export const fetchNewsCron = () => {
       const now = new Date().toLocaleTimeString();
       console.log(`[${now}] 開始抓取新聞`);
       try {
-        // await fetchNews();
-        // await fetchFreeNews();
+        await deleteOldNews();
         await Promise.all([fetchGuardianNews(), fetchFreeNews()]);
         console.log(`[${now}] 抓取完畢`);
       } catch (error) {
