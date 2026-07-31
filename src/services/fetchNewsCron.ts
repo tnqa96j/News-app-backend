@@ -151,6 +151,15 @@ const fetchFreeNews = async () => {
   }
 };
 
+const deleteOldNews = async () => {
+  const result = await NewsCollection.deleteMany({
+    publishedAt: {
+      $lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    },
+  });
+  console.log(`已刪除 ${result.deletedCount} 篇舊新聞`);
+};
+
 export const fetchNewsCron = () => {
   cron.schedule(
     "0 * * * *",
@@ -158,8 +167,8 @@ export const fetchNewsCron = () => {
       const now = new Date().toLocaleTimeString();
       console.log(`[${now}] 開始抓取新聞`);
       try {
-        // await fetchNews();
-        // await fetchFreeNews();
+        // 刪除30天前的舊新聞
+        await deleteOldNews();
         await Promise.all([fetchGuardianNews(), fetchFreeNews()]);
         console.log(`[${now}] 抓取完畢`);
       } catch (error) {
